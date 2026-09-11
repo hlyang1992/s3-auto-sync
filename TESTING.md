@@ -2,7 +2,7 @@
 
 ## Automated release checks
 
-Version 0.1.5 passes **244 tests across six suites**. Production-code coverage is 98.35% statements, 93.89% branches, 97.88% functions, and 99.61% lines. Coverage gates remain 95% statements, 90% branches, 95% functions, and 98% lines.
+Version 0.1.5 passes **244 tests across six suites**. Production-code coverage is 98.23% statements, 93.71% branches, 97.88% functions, and 99.61% lines. Coverage gates remain 95% statements, 90% branches, 95% functions, and 98% lines.
 
 | Suite | Tests | Main coverage |
 | --- | ---: | --- |
@@ -25,7 +25,7 @@ npm run verify-package
 
 Type checking uses the Obsidian 1.8.7 API, matching the minimum declared version. The official Obsidian ESLint plugin reports no errors. Current advisory warnings concern the newer declarative settings API (introduced after our minimum API) and platform-independent timeout helpers. The settings status interval uses its owning window and is cleaned up on hide/unload; scheduler and request timers are also cleared when their work ends or stops.
 
-The package verifier checks the archive file list, compares bundled code and manifest byte/content identity, and evaluates the CommonJS entry point with only `obsidian` as an external module. CI runs these checks on Linux without S3 credentials.
+The package verifier checks the archive file list, compares bundled code and manifest byte/content identity, and evaluates the CommonJS entry point with only `obsidian` as an external module. CI runs these checks on Linux without S3 credentials. Lifecycle tests await the actual command/startup promises before advancing the scheduler clock, so native WebCrypto work is not mistaken for completed work on a slower runner.
 
 ## Live evidence and boundaries
 
