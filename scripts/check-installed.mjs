@@ -7,9 +7,9 @@ import { writeFile } from 'node:fs/promises';
 const vault = process.env.OBSIDIAN_TEST_VAULT;
 assert(vault, 'Set OBSIDIAN_TEST_VAULT to the vault whose connection button should be checked.');
 const code = `(async () => {
-  const p = app.plugins.plugins['s3-auto-sync'];
+  const p = app.plugins.plugins['s-three-auto-sync'];
   if (!p || p.busy) throw new Error('Plugin unavailable or busy');
-  app.setting.open(); app.setting.openTabById('s3-auto-sync');
+  app.setting.open(); app.setting.openTabById('s-three-auto-sync');
   const original = p.store, reader = original.call(p), before = await reader.load();
   const deviceBefore = JSON.stringify(p.device), requests = [], stages = [], keys = new Set(), start = Date.now();
   p.store = function(c) {

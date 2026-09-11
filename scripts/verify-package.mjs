@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const m=JSON.parse(await readFile('manifest.json','utf8'));
+assert.match(m.id,/^[a-z-]+$/,'Community plugin IDs only allow lowercase letters and hyphens');
 const zip=`dist/${m.id}-${m.version}.zip`;
 const files=execFileSync('unzip',['-Z1',zip],{encoding:'utf8'}).trim().split('\n').filter(p=>!p.endsWith('/')).sort();
 const expected=['main.js','manifest.json','styles.css','README.md','LICENSE','THIRD_PARTY_NOTICES.md'].map(p=>m.id+'/'+p).sort();

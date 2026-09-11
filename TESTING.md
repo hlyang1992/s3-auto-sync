@@ -2,7 +2,7 @@
 
 ## Automated release checks
 
-Version 0.1.4 passes **244 tests across six suites**. Production-code coverage is 98.35% statements, 93.89% branches, 97.88% functions, and 99.61% lines. Coverage gates remain 95% statements, 90% branches, 95% functions, and 98% lines.
+Version 0.1.5 passes **244 tests across six suites**. Production-code coverage is 98.35% statements, 93.89% branches, 97.88% functions, and 99.61% lines. Coverage gates remain 95% statements, 90% branches, 95% functions, and 98% lines.
 
 | Suite | Tests | Main coverage |
 | --- | ---: | --- |

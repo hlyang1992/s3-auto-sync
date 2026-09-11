@@ -7,7 +7,7 @@ assert(vault && label && /^[a-z0-9-]+$/.test(label), 'Set OBSIDIAN_TEST_VAULT an
 // Read-only benchmark of the same index/local-file reconciliation reads.
 // Never calls engine.sync, putBlob, commit, replace, or the connection probe.
 const code = `(async () => {
-  const p = app.plugins.plugins['s3-auto-sync'];
+  const p = app.plugins.plugins['s-three-auto-sync'];
   if (!p || p.busy || p.device.enabled) throw new Error('Benchmark requires an idle plugin in manual mode');
   const state = JSON.stringify(p.device), engine = p.createEngine(), local = engine.local, remote = engine.remote;
   const original = remote.request, requests = [], passes = [];

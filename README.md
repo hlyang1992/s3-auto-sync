@@ -6,7 +6,7 @@ The settings interface is currently in Chinese. Requires Obsidian 1.8.7 or newer
 
 ## Getting started
 
-1. Install **S3 Auto Sync** from the community directory when available, or download the files from [Releases](https://github.com/hlyang1992/s3-auto-sync/releases). For manual installation, put `main.js`, `manifest.json`, and `styles.css` in `<vault>/<configuration directory>/plugins/s3-auto-sync/`, then enable the plugin. The usual configuration directory is `.obsidian`.
+1. Install **S3 Auto Sync** from the community directory when available, or download the files from [Releases](https://github.com/hlyang1992/s3-auto-sync/releases). For manual installation, put `main.js`, `manifest.json`, and `styles.css` in `<vault>/<configuration directory>/plugins/s-three-auto-sync/`, then enable the plugin. The usual configuration directory is `.obsidian`.
 2. Enter your HTTPS **Endpoint**, **Bucket**, **Access Key**, and **Secret Key**. Advanced settings provide Region, remote prefix, and path-style addressing. R2 region is handled automatically.
 3. Click **检查连接** (Check connection). It tests the current fields without saving them or synchronizing notes.
 4. Click **保存 S3 配置** (Save S3 configuration). Saving switches this device to manual mode and makes no network request.

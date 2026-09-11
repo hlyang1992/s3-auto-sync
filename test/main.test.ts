@@ -6,7 +6,7 @@ import { defaults } from '../src/model.ts';
 import type { App as OApp,PluginManifest } from 'obsidian';
 import { MemoryRemote,seed,client } from './helpers.ts';
 const cfg={...defaults,endpoint:'https://account.r2.cloudflarestorage.com',bucket:'test-bucket',accessKeyId:'test-access',secretAccessKey:'test-secret'};
-const manifest={id:'s3-auto-sync',name:'S3 Auto Sync',version:'0.1.0',minAppVersion:'1.8.7',description:'test',author:'test'};
+const manifest={id:'s-three-auto-sync',name:'S3 Auto Sync',version:'0.1.0',minAppVersion:'1.8.7',description:'test',author:'test'};
 const plugins:S3AutoSync[]=[];
 async function advance(ms:number){await vi.advanceTimersByTimeAsync(ms);for(const p of plugins)await (p as any).inFlight?.catch(()=>{});}
 function make(app=new App()){const p=new S3AutoSync(app as unknown as OApp,manifest as PluginManifest);plugins.push(p);return {p,app};}
@@ -22,7 +22,7 @@ it('pausing during connection checking prevents a late activation',async()=>{con
 it('does not create duplicate schedulers when start is clicked twice',async()=>{const {p}=make();const r=useRemote(p);await p.onload();await Promise.all([p.activate(cfg),p.activate(cfg)]);expect(r.check).toHaveBeenCalledTimes(1);await p.pause();});
 it('does not remain enabled after a connection check failure',async()=>{const {p}=make();const r=useRemote(p);r.check.mockRejectedValue(Error('denied'));await p.onload();await expect(p.activate(cfg)).rejects.toThrow('denied');expect(p.device.enabled).toBe(false);});
 it('resets local baseline when selecting a different remote bucket',async()=>{const {p}=make();useRemote(p);await p.onload();await p.activate(cfg);await advance(1000);await p.pause();p.device.state.base['old.md']='a'.repeat(64);await p.activate({...cfg,bucket:'other-bucket'});expect(p.device.state.base['old.md']).toBeUndefined();await p.pause();});
-it('rejects malformed local baseline without interpreting it as deletion',async()=>{const app=new App();app.local.set('s3-auto-sync',{enabled:true,identity:'a',state:{base:{'../evil':'bad'}}});const {p}=make(app);await p.onload();expect(p.device.enabled).toBe(false);});
+it('rejects malformed local baseline without interpreting it as deletion',async()=>{const app=new App();app.local.set('s-three-auto-sync',{enabled:true,identity:'a',state:{base:{'../evil':'bad'}}});const {p}=make(app);await p.onload();expect(p.device.enabled).toBe(false);});
 it('uses Obsidian requestUrl for authenticated requests without browser CORS',async()=>{const {p}=make();await p.onload();requestUrl.mockResolvedValue({status:404,headers:{},arrayBuffer:new ArrayBuffer(0)});expect(await p.store(cfg).load()).toEqual({manifest:null,etag:null});expect(requestUrl).toHaveBeenCalledWith(expect.objectContaining({throw:false,method:'GET'}));});
 it('settings default to manual, save without requests, sync on click and toggle automation',async()=>{
  const {p}=make();const r=useRemote(p);await p.onload();p.config=cfg;const tab=(p as any).tabs[0];tab.display();

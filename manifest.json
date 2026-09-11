@@ -1,7 +1,7 @@
 {
-  "id": "s3-auto-sync",
+  "id": "s-three-auto-sync",
   "name": "S3 Auto Sync",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "minAppVersion": "1.8.7",
   "description": "Sync notes and attachments with S3 or Cloudflare R2, manually by default or automatically when enabled.",
   "author": "hlyang1992",
