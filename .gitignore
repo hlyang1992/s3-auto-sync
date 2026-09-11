@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+dist/
+.private/
+data.json
+*.log
+.DS_Store
+main.js
+reports/
+TEST_REPORT.md
+.env
+.env.*

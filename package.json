@@ -1,0 +1,37 @@
+{
+  "name": "s3-auto-sync",
+  "version": "0.1.4",
+  "private": true,
+  "type": "module",
+  "description": "S3-only automatic sync for Obsidian.",
+  "author": "hlyang1992",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --noEmit && node build.mjs",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "test:live": "tsx scripts/live-test.ts",
+    "package": "npm run build && node scripts/package.mjs",
+    "lint": "eslint src manifest.json",
+    "verify-package": "node scripts/verify-package.mjs"
+  },
+  "dependencies": {
+    "aws4fetch": "1.0.20",
+    "fast-xml-parser": "5.11.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@eslint/json": "0.14.0",
+    "@types/node": "^25.0.0",
+    "@vitest/coverage-v8": "^4.0.0",
+    "esbuild": "0.28.2",
+    "eslint": "9.39.5",
+    "eslint-plugin-obsidianmd": "0.4.2",
+    "happy-dom": "^20.14.3",
+    "obsidian": "1.8.7",
+    "tsx": "^4.23.13",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "^4.0.0"
+  }
+}

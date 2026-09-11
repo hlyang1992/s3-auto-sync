@@ -1,0 +1,18 @@
+import { fromRemotelySave } from '../scripts/legacy-config.ts';
+import { expect,it } from 'vitest';
+import { defaults,digest,parseManifest,syncPath,validateConfig,validPath } from '../src/model.ts';
+export const config={...defaults,endpoint:'https://account.r2.cloudflarestorage.com',bucket:'test-bucket',accessKeyId:'test-access',secretAccessKey:'test-secret'};
+it('defaults R2 region and normalizes prefix once',()=>{const c=validateConfig({...config,prefix:'/notes/'});expect(c.prefix).toBe('notes/');expect(c.region).toBe('auto');expect(validateConfig(c)).toEqual(c);});
+it('defaults AWS region while keeping explicit regions',()=>{expect(validateConfig({...config,endpoint:'https://s3.amazonaws.com'}).region).toBe('us-east-1');expect(validateConfig({...config,region:'eu-west-1'}).region).toBe('eu-west-1');});
+it.each(['invalid','http://server','https://user:pass@server','https://server?secret=1','https://server/#part'])('rejects unsafe endpoint %s',endpoint=>expect(()=>validateConfig({...config,endpoint})).toThrow());
+it.each([{bucket:''},{bucket:'bad/name'},{accessKeyId:''},{secretAccessKey:''},{prefix:'../other'},{prefix:'.s3-auto-sync/inside'}])('rejects invalid configuration %j',change=>expect(()=>validateConfig({...config,...change})).toThrow());
+it.each(['../x','/x','a//b','a\\b','a\u0000b','CON.md','folder/NUL','a:stream','x.','x ','cafe\u0301.md'])('rejects unsafe cross-platform path %s',p=>expect(validPath(p)).toBe(false));
+it.each(['中文/笔记.md','图 % &.png','a+b.md','under_score.md','café.md','__proto__'])('accepts safe path %s',p=>expect(syncPath(p)).toBe(true));
+it.each(['.obsidian/data.json','.git/config','.s3-auto-sync/x','notes/.hidden'])('excludes hidden paths %s',p=>expect(syncPath(p)).toBe(false));
+it('uses real SHA-256',async()=>expect(await digest(new TextEncoder().encode('abc'))).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'));
+const e={hash:'a'.repeat(64),size:1,mtime:1};
+it.each([{version:2},{id:''},{revision:-1},{revision:0.5},{files:[]},{files:{'../x':e}},{files:{'x':{...e,hash:'bad'}}},{files:{x:{...e,size:-1}}},{files:{x:{...e,mtime:-1}}},{files:{x:{...e,deleted:'yes'}}},{files:{'A.md':e,'a.md':e}},{files:{'a':e,'a/b':e}}])('rejects invalid manifests %j',change=>expect(()=>parseManifest(JSON.stringify({version:1,id:'x',revision:0,files:{},...change}))).toThrow());
+it('allows a deleted old path next to a differently cased replacement',()=>expect(parseManifest(JSON.stringify({version:1,id:'x',revision:0,files:{'A.md':{...e,deleted:true},'a.md':e}})).files).toBeDefined());
+const legacy={serviceType:'s3',s3:{s3Endpoint:config.endpoint,s3BucketName:config.bucket,s3AccessKeyID:config.accessKeyId,s3SecretAccessKey:config.secretAccessKey,s3Region:'us-east-1',forcePathStyle:false}};
+it('imports plain and reversed base64 Remotely Save 0.5.25 settings',()=>{expect(fromRemotelySave(legacy).bucket).toBe(config.bucket);const d=[...Buffer.from(JSON.stringify(legacy)).toString('base64url')].reverse().join('');expect(fromRemotelySave({readme:'sensitive',d})).toEqual(fromRemotelySave(legacy));});
+it.each([{},null,{serviceType:'webdav'},{...legacy,password:'encrypted'},{...legacy,s3:{...legacy.s3,reverseProxyNoSignUrl:'https://proxy'}},{readme:'test',d:'malformed'}])('rejects unsupported legacy config without logging credentials',d=>expect(()=>fromRemotelySave(d)).toThrow());
